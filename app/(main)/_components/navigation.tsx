@@ -11,7 +11,7 @@ import {
   Trash,
 } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
-import { usePathname, useParams } from "next/navigation";
+import { usePathname, useParams, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import UserItem from "./user-item";
 import { useMutation } from "convex/react";
@@ -35,6 +35,7 @@ const Navigation = () => {
   const search = useSearch();
   const settings = useSettings();
   const params = useParams();
+  const router = useRouter();
 
   const create = useMutation(api.documents.create);
 
@@ -123,7 +124,9 @@ const Navigation = () => {
   };
 
   const handleCreate = () => {
-    const promise = create({ title: "Untitled" });
+    const promise = create({ title: "Untitled" }).then((documentId) =>
+      router.push(`/documents/${documentId}`)
+    );
 
     toast.promise(promise, {
       loading: "Creating a new note",
